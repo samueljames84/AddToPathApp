@@ -19,7 +19,7 @@ static void Main(string[] args)
           // Check if running with admin privileges
           if (!IsUserAdministrator())
           {
-               Console.WriteLine("This application requires administrative privileges to run.");
+               ShowTooltip("Access denied", "Message: Please run as administrator.");
                return;
           }
 
@@ -30,7 +30,7 @@ static void Main(string[] args)
                pathToAdd = args[0];
                if (!Directory.Exists(pathToAdd))
                {
-                    Console.WriteLine($"Error: Directory '{pathToAdd}' does not exist.");
+                    ShowTooltip("Error", $"Directory '{pathToAdd}' does not exist.");
                     return;
                }
           }
@@ -38,7 +38,8 @@ static void Main(string[] args)
           {
                // Use the application's directory if no path is provided
                pathToAdd = AppContext.BaseDirectory;
-               Console.WriteLine($"No path provided. Using application directory: {pathToAdd}");
+               ShowTooltip("Info", $"No path provided. Using application directory: {pathToAdd}");
+               return;
           }
 
           // Get the current PATH variable
@@ -48,8 +49,8 @@ static void Main(string[] args)
           // Check if path already exists
           if (paths.Any(p => string.Equals(p, pathToAdd, StringComparison.OrdinalIgnoreCase)))
           {
-               Console.WriteLine($"Path '{pathToAdd}' is already in the system PATH.");
-               ShowTooltip("Folder already exists", pathToAdd);
+               ShowTooltip("Path Already Exists in System PATH.", $"Path: {pathToAdd}");
+               //ShowTooltip("Info: Path Already Exists in System PATH.", $"Path: '{pathToAdd}' is already in the system PATH.");
                return;
           }
 
@@ -59,16 +60,16 @@ static void Main(string[] args)
 
           // Set the new PATH
           Environment.SetEnvironmentVariable("PATH", newPath, EnvironmentVariableTarget.Machine);
-          Console.WriteLine($"Successfully added '{pathToAdd}' to system PATH.");
-          ShowTooltip("Added successfully", pathToAdd);
+          ShowTooltip("Info: Successfully added to system PATH.", $"Path:{pathToAdd}");
+          //ShowTooltip("Success", $"Successfully added '{pathToAdd}' to system PATH.");
      }
      catch (SecurityException)
      {
-          Console.WriteLine("Access denied. Please run as administrator.");
+          ShowTooltip("Access denied", "Please run as administrator.");
      }
      catch (Exception ex)
      {
-          Console.WriteLine($"An error occurred: {ex.Message}");
+          ShowTooltip("Error", $"An error occurred: {ex.Message}");
      }
 }
 
@@ -88,7 +89,7 @@ private static bool IsUserAdministrator()
      }
 }
 
-static void ShowTooltip(string status, string folderPath)
+static void ShowTooltip(string status, string message)
 {
      Application.EnableVisualStyles();
 
@@ -114,11 +115,11 @@ static void ShowTooltip(string status, string folderPath)
      using var label = new Label
      {
           Dock = DockStyle.Fill,
-          Text = $"Status: {status}\nPath: {folderPath}",
+          Text = $"Status: {status}\n{message}",
           ForeColor = Color.White,
           TextAlign = ContentAlignment.MiddleLeft,
           Font = new Font("Consolas", 10),
-          Padding = new Padding(20)
+          Padding = new Padding(10)
      };
 
      tooltipForm.Controls.Add(label);
@@ -126,10 +127,10 @@ static void ShowTooltip(string status, string folderPath)
      // Show the form
      tooltipForm.Show();
 
-     // Close the form after 1 second
+     // Close the form after 5 seconds
      using var timer = new System.Windows.Forms.Timer
      {
-          Interval = 5000
+          Interval = 3000
      };
 
      timer.Tick += (sender, e) =>
@@ -144,5 +145,3 @@ static void ShowTooltip(string status, string folderPath)
      Application.Run();
 }
 }
-
-// In this version, the code checks if the user has administrative privileges using the `IsUserAdministrator` method. If the user is not an administrator, it simply prints a message and exits without attempting to restart with elevated privileges.
