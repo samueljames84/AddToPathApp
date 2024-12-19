@@ -16,10 +16,10 @@ static void Main(string[] args)
 {
      try
      {
-          // Check if running with admin privileges and restart with elevation if needed
+          // Check if running with admin privileges
           if (!IsUserAdministrator())
           {
-               RestartWithElevatedPrivileges(args);
+               Console.WriteLine("This application requires administrative privileges to run.");
                return;
           }
 
@@ -88,45 +88,6 @@ private static bool IsUserAdministrator()
      }
 }
 
-private static void RestartWithElevatedPrivileges(string[] args)
-{
-     try
-     {
-          // Get the path of the current executable
-          using var currentProcess = Process.GetCurrentProcess();
-          var mainModule = currentProcess.MainModule;
-          if (mainModule?.FileName == null)
-          {
-               Console.WriteLine("Unable to determine the application path.");
-               return;
-          }
-
-          string exePath = mainModule.FileName;
-
-          // Prepare process start info for elevated privileges
-          ProcessStartInfo startInfo = new ProcessStartInfo
-          {
-               UseShellExecute = true,
-               WorkingDirectory = Environment.CurrentDirectory,
-               FileName = exePath,
-               Arguments = string.Join(" ", args.Select(arg => $"\"{arg}\"")),
-               Verb = "runas" // This triggers the UAC prompt
-          };
-
-          // Start the new process
-          using var process = Process.Start(startInfo);
-          if (process == null)
-          {
-               Console.WriteLine("Failed to start elevated process.");
-               return;
-          }
-     }
-     catch (Exception ex)
-     {
-          Console.WriteLine("Failed to restart with elevated privileges: " + ex.Message);
-     }
-}
-
 static void ShowTooltip(string status, string folderPath)
 {
      Application.EnableVisualStyles();
@@ -147,7 +108,8 @@ static void ShowTooltip(string status, string folderPath)
      tooltipForm.Location = new Point(
           Screen.PrimaryScreen.WorkingArea.Width - tooltipForm.Width - 5,
           Screen.PrimaryScreen.WorkingArea.Height - tooltipForm.Height - 5
-     );     
+     );
+
      // Create label for the message
      using var label = new Label
      {
@@ -156,7 +118,7 @@ static void ShowTooltip(string status, string folderPath)
           ForeColor = Color.White,
           TextAlign = ContentAlignment.MiddleLeft,
           Font = new Font("Consolas", 10),
-          Padding = new Padding(10)
+          Padding = new Padding(20)
      };
 
      tooltipForm.Controls.Add(label);
@@ -182,3 +144,5 @@ static void ShowTooltip(string status, string folderPath)
      Application.Run();
 }
 }
+
+// In this version, the code checks if the user has administrative privileges using the `IsUserAdministrator` method. If the user is not an administrator, it simply prints a message and exits without attempting to restart with elevated privileges.
