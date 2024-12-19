@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>WinExe</OutputType> <!-- Set to Exe when there is no GUI or not using win forms  -->
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>AddToPath</AssemblyName>
+    <OutputPath>./bin/Release/</OutputPath>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Version>1.0.0</Version> <!-- Semantic version -->
+    <AssemblyVersion>1.0.0.0</AssemblyVersion> <!-- Runtime binding -->
+    <FileVersion>1.0.0.0</FileVersion> <!-- File information -->
+    <InformationalVersion>1.0.0-stable</InformationalVersion> <!-- Optional "1.2.0-beta" -->
+    <Description>Free tool to Add Folder to ENV Path variable</Description>
+    <Company>Samuel James</Company>
+    <Authors>Samuel James</Authors>
+    <Copyright>©2024. All rights reserved. Free to use</Copyright>
+  </PropertyGroup>
+</Project>
