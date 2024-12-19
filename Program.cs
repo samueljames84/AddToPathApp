@@ -57,12 +57,6 @@ static void Main(string[] args)
           // Add the new path
           paths.Add(pathToAdd);
           string newPath = string.Join(Path.PathSeparator, paths);
-          {
-               if (!newPath.EndsWith("\\"))
-               {
-                    newPath += "\\";
-               }
-          }
 
           // Set the new PATH
           Environment.SetEnvironmentVariable("PATH", newPath, EnvironmentVariableTarget.Machine);
@@ -151,3 +145,11 @@ static void ShowTooltip(string status, string message)
      Application.Run();
 }
 }
+
+// How to add \ at the end of the path
+//             {
+//                  if (!pathToAdd.EndsWith("\\"))
+//                  {
+//                  pathToAdd += "\\";
+//                }
+//         }
